@@ -59,6 +59,23 @@ impl Todo {
         serde_json::to_writer_pretty(f, &self.map)?;
         Ok(())
     }
+
+    // Function to print the contents of db.json to the screen
+    // Currently stolen from Rust By Example
+    fn show(&mut self) {
+       if let Ok(lines) = Self::read_lines("./db.json") {
+           // Consumes the iterator returns option String
+           for line in lines.flatten() {
+               println!("{}", line);
+           }
+       } 
+    }
+
+    fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> 
+    where P: AsRef<Path>, {
+        let file = File::open(filename)?;
+        Ok(io::BufReader::new(file).lines())
+    }
     
     fn complete(&mut self, key: &String) -> Option<()> {
         match self.map.get_mut(key) {
