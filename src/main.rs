@@ -1,4 +1,8 @@
 use std::collections::HashMap;
+use std::fs::File;
+use std::path::Path;
+use std::io;
+use std::io::BufRead;
 
 fn main() {
     let action = std::env::args().nth(1).expect("Please specify an action");
@@ -19,6 +23,8 @@ fn main() {
                 Err(why) => println!("An error occurred: {}", why),
             },
         }
+    } else if action == "show" {
+        todo.show() 
     }
 }
 
@@ -29,7 +35,7 @@ struct Todo {
 
 impl Todo {
     fn new() -> Result<Todo, std::io::Error> {
-        let f = std::fs::OpenOptions::new()
+       let f = std::fs::OpenOptions::new()
             .write(true)
             .create(true)
             .read(true)
@@ -65,10 +71,24 @@ impl Todo {
     fn show(&mut self) {
        if let Ok(lines) = Self::read_lines("./db.json") {
            // Consumes the iterator returns option String
+           let mut out = String::from("");
            for line in lines.flatten() {
-               println!("{}", line);
+               // This can be made prettier using the following sudo-code
+               // mut Message = "|";
+               // Message = Message.append(line[key]);
+               // Message = Message.append(checkboxtype(line[value]));
+               // Println!("{}", Message);
+               // Found a bit of something that could be good. It's in a youtube video
+               if line.contains("{") {
+               } else if line.contains("}"){
+               } else {
+                   let result = line.replace("\":", "\"|");
+                   out = format!("{}|{} |\n", &out, &result);
+               }
            }
-       } 
+           println!("|----|----|");
+           println!("{}", out);
+       }
     }
 
     fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> 
