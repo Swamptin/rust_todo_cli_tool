@@ -18,3 +18,8 @@ Possible action are add, complete, and show.
 To execute 'show' you must run `cargo run show all` The 'all' isn't strictly
 checked, but without it it errors due to only having one input. I will be
 working to fix that as I can.  
+  
+Other features to be added include:
+- progress for tasks rather than true/false
+- keep the tool running for more than a single action
+- print currently open/ongoing todos on launch
