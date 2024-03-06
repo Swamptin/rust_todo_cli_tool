@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 serde_json = "1.0.60"
+json_to_table = "0.7.0"

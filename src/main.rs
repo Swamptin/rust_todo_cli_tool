@@ -1,8 +1,6 @@
 use std::collections::HashMap;
 use std::fs::File;
-use std::path::Path;
-use std::io;
-use std::io::BufRead;
+use json_to_table::json_to_table;
 
 fn main() {
     let action = std::env::args().nth(1).expect("Please specify an action");
@@ -67,34 +65,13 @@ impl Todo {
     }
 
     // Function to print the contents of db.json to the screen
-    // Currently stolen from Rust By Example
+    // Originally stolen from Rust By Example
+    // Searching returned the json_to_table crate, which is what I will use going forward
     fn show(&mut self) {
-       if let Ok(lines) = Self::read_lines("./db.json") {
-           // Consumes the iterator returns option String
-           let mut out = String::from("");
-           for line in lines.flatten() {
-               // This can be made prettier using the following sudo-code
-               // mut Message = "|";
-               // Message = Message.append(line[key]);
-               // Message = Message.append(checkboxtype(line[value]));
-               // Println!("{}", Message);
-               // Found a bit of something that could be good. It's in a youtube video
-               if line.contains("{") {
-               } else if line.contains("}"){
-               } else {
-                   let result = line.replace("\":", "\"|");
-                   out = format!("{}|{} |\n", &out, &result);
-               }
-           }
-           println!("|----|----|");
-           println!("{}", out);
-       }
-    }
-
-    fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> 
-    where P: AsRef<Path>, {
-        let file = File::open(filename)?;
-        Ok(io::BufReader::new(file).lines())
+        let file = File::open("./db.json").expect("File should open read only");
+        let value: serde_json::Value = serde_json::from_reader(file).expect("File should be proper JSON format.");
+        let table = json_to_table(&value).to_string();
+        println!("{}", table);
     }
     
     fn complete(&mut self, key: &String) -> Option<()> {
