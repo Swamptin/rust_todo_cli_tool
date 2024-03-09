@@ -1,13 +1,11 @@
 use std::collections::HashMap;
-use std::fmt::format;
 use std::fs::File;
 use json_to_table::json_to_table;
 
 fn main() {
     let error = usage();
-    println!("{}", error);
-    let action = std::env::args().nth(1).expect(format!("{}", error));
-    let item = std::env::args().nth(2).expect(format!("{}", error));
+    let action = std::env::args().nth(1).expect(error);
+    let item = std::env::args().nth(2).expect(error);
 
     let mut todo = Todo::new().expect("Initialisation of db failed");
     if action == "add" {
@@ -30,9 +28,8 @@ fn main() {
         todo.usage();
     }
 
-    fn usage() -> String{
-        let message = "--- Usage ---\nThis app can be used to create and update personal TODO items.\nTo run this app please launch it with one of the following options: \n\nadd \"String\": This creates a new TODO item and sets it to true. \ncomplete \"String\": This marks a TODO item as done/false \nshow table: Output the contents of your TODO list. \nUsage: Display this usage message";
-        message
+    fn usage() -> &'static str{
+        "--- Usage ---\n\nThis app can be used to create and update personal TODO items.\n\nTo run this app please launch it with one of the following options: \n\nadd \"String\": This creates a new TODO item and sets it to true. \ncomplete \"String\": This marks a TODO item as done/false \nshow table: Output the contents of your TODO list. \nUsage: Display this usage message"
     }
 }
 struct Todo {
